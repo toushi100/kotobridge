@@ -1,0 +1,24 @@
+[project]
+name = "kotobridge"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Ahmed Salah",email = "toushi2009@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "typer (>=0.24.1,<0.25.0)"
+]
+
+[project.scripts]
+kotobridge = "kotobridge.cli:app"
+
+[tool.poetry]
+packages = [{include = "kotobridge", from = "src"}]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
