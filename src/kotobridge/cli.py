@@ -1,14 +1,20 @@
 import typer
-
+from kotobridge.translate import Translate
+import time
 app = typer.Typer()
 
 @app.command()
-def hello(name: str = "world"):
-    print(f"Hello, {name}!")
+def translate(name: str ):
+    start_time = time.time()    
+    if name is None:
+        typer.echo("Please enter a valid text to translate")
+        return None
+    translate = Translate(name)
+    result = translate.translate()
 
-@app.command()
-def goodbye(name: str = "world"):
-    print(f"Goodbye, {name}!")
+    end_time = time.time()
+    typer.echo(f"Time taken: {end_time - start_time} seconds")
+    return None
 
 @app.command()
 def main():
