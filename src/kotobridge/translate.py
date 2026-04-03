@@ -1,6 +1,4 @@
-
-import torch
-import whisper
+import kotobridge.model as model
 from dataclasses import dataclass
 @dataclass(frozen=True)
 class TranscriptSegment:
@@ -8,18 +6,13 @@ class TranscriptSegment:
     end: float
     text: str
 class Translate:
-    def __init__(self, path: str, target_language: str = "en",model: str = "whisper"):
+    def __init__(self, path: str, target_language: str = "en", model_name: str = "large-v3"):
         self.path = path
-        self.target_language = target_language
-        self.model = model
+        self.model = model.Model(model_name).load_model()
 
 
     def translate(self):
-        self.device = "mps" if torch.backends.mps.is_available() else "cpu" 
-        self.device = "cuda" if torch.cuda.is_available() else self.device
-        print(f"Using device: {self.device}")
-        self.whisper = whisper.load_model("large-v3", device=self.device)
-        result = self.whisper.transcribe(self.path,task="translate")
+        result = self.model.transcribe(self.path, task="translate")
         print(f"Translated text: {result['text']}")
         print(f"Translated text: {result['language']}")
         raw_segments = result.get("segments", [])
