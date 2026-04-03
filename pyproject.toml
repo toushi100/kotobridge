@@ -8,11 +8,12 @@ authors = [
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "typer (>=0.24.1,<0.25.0)"
+    "typer (>=0.24.1,<0.25.0)",
+    "ffmpeg (>=1.4,<2.0)"
 ]
 
 [project.scripts]
-kotobridge = "kotobridge.cli:app"
+koto = "kotobridge.cli:app"
 
 [tool.poetry]
 packages = [{include = "kotobridge", from = "src"}]
