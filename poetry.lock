@@ -41,6 +41,17 @@ files = [
 ]
 
 [[package]]
+name = "ffmpeg"
+version = "1.4"
+description = "ffmpeg python package url [https://github.com/jiashaokun/ffmpeg]"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "ffmpeg-1.4.tar.gz", hash = "sha256:6931692c890ff21d39938433c2189747815dca0c60ddc7f9bb97f199dba0b5b9"},
+]
+
+[[package]]
 name = "markdown-it-py"
 version = "4.0.0"
 description = "Python port of markdown-it. Markdown parsing, done right!"
@@ -143,4 +154,4 @@ shellingham = ">=1.3.0"
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10"
-content-hash = "2d6605efd52f81d9937401e63b632e7c4fc83dae0bb955c3d59109dcdf9f2450"
+content-hash = "39fc17304e225075b62a7e46f09d6e0ff250ab3fa07822d501ad0665ef6287e4"
