@@ -12,7 +12,7 @@ class Translate:
 
 
     def translate(self):
-        result = self.model.transcribe(self.path, task="translate")
+        result = self.model.transcribe(self.path, task="translate",no_speech_threshold=0.1)
         print(f"Translated text: {result['text']}")
         print(f"Translated text: {result['language']}")
         raw_segments = result.get("segments", [])
