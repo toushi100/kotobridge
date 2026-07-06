@@ -20,6 +20,7 @@ def translate(name: str ):
 def main():
     # should get back to this later so the cli would be interactive
     typer.echo("!----------------------------------------------------------------! ")
+    #'/Users/ahmed/Movies/クレヨンしんちゃん/クレヨンしんちゃん/1992/＃1-1　おつかいに行くゾ [1992-04-13][D2485D01].mp4'
     return None
     typer.echo("Welcome to Kotobridge!")
     typer.echo("Select an option:")
