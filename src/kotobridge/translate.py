@@ -1,20 +1,35 @@
+from os import path
+
 import kotobridge.model as model
 from dataclasses import dataclass
+from ollama import Client
+
 @dataclass(frozen=True)
 class TranscriptSegment:
     start: float
     end: float
     text: str
 class Translate:
-    def __init__(self, path: str, target_language: str = "en", model_name: str = "large-v3"):
+    def __init__(self, path: str, target_language: str = "en", model_name: str = "large-v3",language: str = "auto"):
+
         self.path = path
         self.model = model.Model(model_name).load_model()
 
 
     def translate(self):
-        result = self.model.transcribe(self.path, task="translate",no_speech_threshold=0.1)
-        print(f"Translated text: {result['text']}")
-        print(f"Translated text: {result['language']}")
+        result = self.model.transcribe( self.path,
+                                        fp16=True,
+                                        verbose=True,
+                                        temperature=0.0,
+                                        beam_size=5,
+                                        best_of=5,
+                                        condition_on_previous_text=True,
+                                        initial_prompt="Subtitles, dialogue, anime terms, Japanese names, Honorifics (-san, -kun, -sama, -chan), Senpai, Sensei, [Gasp], [Screaming], [Music playing].",
+                                        carrry_initial_prompt=True,
+                                    )
+        
+        print(f"Translated text: {result}")
+        
         raw_segments = result.get("segments", [])
         segments = [
         TranscriptSegment(
@@ -24,6 +39,26 @@ class Translate:
         )
         for segment in raw_segments
     ]
-        print(f"result keys: {result.keys()}")
-        print(f"Segments: {segments}")
+        
+        trascription_output_path = self.path.replace(".mp4", ".ja.srt").replace(".mkv", ".ja.srt").replace(".avi", ".ja.srt")
+        self.write_srt_file(segments, trascription_output_path)
+        
+        
         return result
+
+    def format_time(self, seconds: float) -> str:
+        hours = int(seconds // 3600)
+        minutes = int((seconds % 3600) // 60)
+        secs = int(seconds % 60)
+        millis = int((seconds - int(seconds)) * 1000)
+        return f"{hours:02d}:{minutes:02d}:{secs:02d},{millis:03d}"
+
+    def write_srt_file(self, segments, transcription_output_path):
+        with open(transcription_output_path, "w", encoding="utf-8") as srt_file:
+            for i, segment in enumerate(segments, start=1):
+                start_time = self.format_time(segment.start)
+                end_time = self.format_time(segment.end)
+                srt_file.write(f"{i}\n{start_time} --> {end_time}\n{segment.text}\n\n")
+                
+        print(f"SRT file written to: {transcription_output_path}")
+
