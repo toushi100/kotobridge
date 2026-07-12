@@ -1,6 +1,8 @@
 import typer
 from kotobridge.translate import Translate
 import time
+from kotobridge.crawler import Crawler
+
 app = typer.Typer()
 
 @app.command()
@@ -15,7 +17,15 @@ def translate(name: str ):
     end_time = time.time()
     typer.echo(f"Time taken: {end_time - start_time} seconds")
     return None
-
+@app.command()
+def crawl(folder_path: str):
+    if folder_path is None:
+        typer.echo("Please enter a valid folder path")
+        return None
+    crawler = Crawler(folder_path)
+    crawler.crawl()
+    print(f"Total files found: {crawler.get_count()}")
+    return None
 @app.command()
 def main():
     # should get back to this later so the cli would be interactive
