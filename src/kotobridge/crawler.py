@@ -12,5 +12,11 @@ class Crawler:
                 if file_path.endswith(('.mp4', '.mkv', '.avi', '.mov', '.flv', '.wmv', '.mp3', '.wav', '.aac')):
                     self.files.append(file_path)
                     print(f"Found file: {file_path}")
+        return self
+
     def get_count(self):
         return len(self.files)
+    
+    def store_discovered_files(self, db):
+        for file_path in self.files:
+            db.insert(f"INSERT INTO videos (file_path, status) VALUES ('{file_path}', 0)")
