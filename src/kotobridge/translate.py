@@ -9,15 +9,16 @@ class TranscriptSegment:
     start: float
     end: float
     text: str
+
 class Translate:
-    def __init__(self, path: str, target_language: str = "en", model_name: str = "large-v3",language: str = "auto"):
-
-        self.path = path
+    def __init__(self, model_name: str = "large-v3", language: str = "auto"):
         self.model = model.Model(model_name).load_model()
+        self.path = None
 
-
-    def translate(self):
-        result = self.model.transcribe( self.path,
+    def transcribe(self, path: str):
+        self.path = path
+        result = self.model.transcribe(
+            path,
                                         fp16=True,
                                         verbose=True,
                                         temperature=0.0,
@@ -25,7 +26,7 @@ class Translate:
                                         best_of=5,
                                         condition_on_previous_text=True,
                                         initial_prompt="Subtitles, dialogue, anime terms, Japanese names, Honorifics (-san, -kun, -sama, -chan), Senpai, Sensei, [Gasp], [Screaming], [Music playing].",
-                                        carrry_initial_prompt=True,
+                                        carry_initial_prompt=True,
                                     )
         
         print(f"Translated text: {result}")
