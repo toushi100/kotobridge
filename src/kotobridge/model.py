@@ -1,7 +1,7 @@
 import torch
 import whisper
 import psutil
-from faster_whisper import WhisperModel
+
 class Model:
     def __init__(self, model_name: str="large-v3-turbo"):
         self.model_name = model_name
