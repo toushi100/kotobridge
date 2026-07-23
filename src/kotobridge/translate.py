@@ -1,6 +1,6 @@
 from os import path
 
-import kotobridge.model as model
+from .model import Model, ModelType
 from dataclasses import dataclass
 from ollama import Client
 
@@ -12,21 +12,32 @@ class TranscriptSegment:
 
 class Translate:
     def __init__(self, model_name: str = "large-v3", language: str = "auto"):
-        self.model = model.Model(model_name).load_model()
+        self.model = Model(model_name)
+        self.loaded_model = self.model.load_model(type=ModelType.MLX_WHISPER)
+
+        # self.clear_cache = self.model.clear_cache()
         self.path = None
 
     def transcribe(self, path: str):
         self.path = path
-        result = self.model.transcribe(
+        path_or_hf= 'mlx-community/whisper-large-v3-mlx'
+        result = self.loaded_model.transcribe(
             path,
-                                        fp16=True,
-                                        verbose=True,
-                                        temperature=0.0,
-                                        beam_size=5,
-                                        best_of=5,
-                                        condition_on_previous_text=True,
-                                        initial_prompt="Subtitles, dialogue, anime terms, Japanese names, Honorifics (-san, -kun, -sama, -chan), Senpai, Sensei, [Gasp], [Screaming], [Music playing].",
-                                        carry_initial_prompt=True,
+            path_or_hf_repo=path_or_hf,
+            language="ja",
+                fp16=False,
+    verbose=True,
+    temperature=0.0,
+    # beam_size=5,
+    # best_of=5,
+    condition_on_previous_text=True,
+    initial_prompt=(
+        "Japanese anime subtitles. "
+        "Dialogue between characters. "
+        "Japanese names and honorifics such as -san, -kun, -sama, -chan. "
+        "Senpai, Sensei."
+    ),
+
                                     )
         
         print(f"Translated text: {result}")
@@ -41,9 +52,9 @@ class Translate:
         for segment in raw_segments
     ]
         
-        trascription_output_path = self.path.replace(".mp4", ".ja.srt").replace(".mkv", ".ja.srt").replace(".avi", ".ja.srt")
-        self.write_srt_file(segments, trascription_output_path)
-        
+        transcription_output_path = self.path.replace(".mp4", ".ja.srt").replace(".mkv", ".ja.srt").replace(".avi", ".ja.srt")
+        self.write_srt_file(segments, transcription_output_path)
+        # self.clear_cache
         
         return result
 
