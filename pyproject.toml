@@ -10,8 +10,10 @@ requires-python = ">=3.9"
 dependencies = [
     "typer",
     "openai-whisper",
-    "psutil"
-
+    "psutil",
+    "ollama>=0.6.2",
+    "faster-whisper>=1.2.1",
+    "mlx-whisper>=0.4.3",
 ]
 
 [project.scripts]

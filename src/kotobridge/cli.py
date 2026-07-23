@@ -54,13 +54,13 @@ def crawl(folder_path: str):
 
 @app.command()
 def resume():
-    videos = db.query(f"SELECT * FROM videos WHERE status < {STATUS_MAP['translated']}")
+    videos = db.query(f"SELECT * FROM videos WHERE status < {STATUS_MAP['translated']} ORDER BY file_path ASC")
     print(f"Total files to process: {len(videos)}")
     for video in videos:
         video_id, file_path, language, status = video
         if status == STATUS_MAP["discovered"]:
             print(f"Transcribing file: {file_path}")
-            result = translator.transcribe(file_path)
+            translator.transcribe(file_path)
             db.update(f"UPDATE videos SET status = {STATUS_MAP['transcribed']} WHERE id= {video_id}")
         # elif status == STATUS_MAP["transcribed"]:
         #     print(f"Translating file: {file_path}")
